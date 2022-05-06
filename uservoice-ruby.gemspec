@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rspec", '>= 1.0.5'
   s.add_runtime_dependency 'ezcrypto', '>= 0.7.2'
-  s.add_runtime_dependency 'json', '>= 1.7.5'
+  s.add_runtime_dependency 'multi_json'
+  s.add_runtime_dependency 'oj'
   s.add_runtime_dependency 'oauth', '>= 0.4.7'
 end
