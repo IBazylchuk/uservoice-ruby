@@ -3,7 +3,8 @@ require 'uservoice/collection'
 require 'uservoice/client'
 require 'rubygems'
 require 'ezcrypto'
-require 'json'
+require 'oj'
+require 'multi_json'
 require 'cgi'
 require 'base64'
 require 'oauth'
@@ -32,7 +33,7 @@ module UserVoice
     end
 
     key = EzCrypto::Key.with_password(subdomain_key, sso_key)
-    encrypted = key.encrypt(user_hash.to_json)
+    encrypted = key.encrypt(MultiJson.dump(user_hash))
     encoded = Base64.encode64(encrypted).gsub(/\n/,'')
 
     return CGI.escape(encoded)
@@ -40,6 +41,6 @@ module UserVoice
 
   def self.decrypt_sso_token(subdomain_key, sso_key, encoded)
     encrypted = Base64.decode64(CGI.unescape(encoded))
-    return JSON.parse(EzCrypto::Key.with_password(subdomain_key, sso_key).decrypt(encrypted))
+    return MultiJson.load(EzCrypto::Key.with_password(subdomain_key, sso_key).decrypt(encrypted))
   end
 end
