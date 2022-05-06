@@ -96,7 +96,7 @@ module UserVoice
       headers = DEFAULT_HEADERS.merge(headers)
 
       if headers['Content-Type'] == 'application/json' && request_body.is_a?(Hash)
-        request_body = request_body.to_json
+        request_body = MultiJson.dump(request_body)
       end
 
       response = case method.to_sym
@@ -112,7 +112,7 @@ module UserVoice
              when 'raw'
                response
              else
-               attrs = JSON.parse(response.body)
+               attrs = MultiJson.load(response.body)
                if attrs && attrs['errors']
                  case attrs['errors']['type']
                  when 'unauthorized'
